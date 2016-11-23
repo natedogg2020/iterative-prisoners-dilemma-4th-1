@@ -10,35 +10,56 @@ team_name = 'Lauren&Carly' # Only 10 chars displayed.
 strategy_name = 'The name the team gives to this strategy'
 strategy_description = 'How does this strategy decide?'
 
-mHis = my_history
-thHis = their_history
-mScore = my_score
-thScore = their_score
-
-def betrayed(mHis, thHis, mScore, thScore):
+def betrayed(their_history):
     '''Checks if we were betrayed'''
-    if mHis[-1] == 'c' and thHis[-1] == 'b':
+    
+    thHis = their_history
+    
+    if thHis[-1] == 'b':
         return True
     else: 
         return False
-def colPerc(mHis, thHis, mScore, thScore):
+        
+def colPerc(their_history):
     '''What percentage of their history is collusion'''
+    
+    thHis = their_history
+    
     tot = len(thHis)
     colN = 0
     colP = 0.0
     for move in thHis:
         if move == 'c': 
-            colN =+ 1
+            colN += 1
     colP = float(colN)/tot
     return colP
     
-def move(mHis, thHis, mScore, thScore):
+def betPerc(their_history):
+    '''What percentage of their history is betrayal'''
+    
+    thHis = their_history
+    
+    tot = len(thHis)
+    betN = 0
+    betP = 0.0
+    for move in thHis:
+        if move == 'b': 
+            betN += 1
+    betP = betN/tot
+    return betP
+    
+def move(my_history, their_history, my_score, their_score):
     ''' Arguments accepted: my_history, their_history are strings.
     my_score, their_score are ints.
     
     Make my move.
     Returns 'c' or 'b'. 
     '''
+
+    mHis = my_history
+    thHis = their_history
+    mScore = my_score
+    thScore = their_score
 
     # my_history: a string with one letter (c or b) per round that has been played with this opponent.
     # their_history: a string of the same length as history, possibly empty. 
@@ -47,6 +68,8 @@ def move(mHis, thHis, mScore, thScore):
     
     # Analyze my_history and their_history and/or my_score and their_score.
     # Decide whether to return 'c' or 'b'.
+    
+    
     while mHis== '':
         return 'c'
     if thHis[-3] == 'bbb':
@@ -74,13 +97,14 @@ def test_move(my_history, their_history, my_score, their_score, result):
 
 if __name__ == '__main__':
      
-    # Test 1: Betray on first move.
+    # Test 1: Collude on first move.
     if test_move(my_history='',
               their_history='', 
               my_score=0,
               their_score=0,
-              result='b'):
+              result='c'):
          print 'Test passed'
+    
      # Test 2: Continue betraying if they collude despite being betrayed.
     test_move(my_history='bbb',
               their_history='ccc', 
@@ -92,4 +116,5 @@ if __name__ == '__main__':
               # move('bbb', 'ccc', 0, 0) returns 'b'.
               my_score=0, 
               their_score=0,
-              result='b')             
+              result='b')
+                                                                                                           
