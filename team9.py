@@ -9,8 +9,30 @@
 team_name = 'Lauren&Carly' # Only 10 chars displayed.
 strategy_name = 'The name the team gives to this strategy'
 strategy_description = 'How does this strategy decide?'
+
+mHis = my_history
+thHis = their_history
+mScore = my_score
+thScore = their_score
+
+def betrayed(mHis, thHis, mScore, thScore):
+    '''Checks if we were betrayed'''
+    if mHis[-1] == 'c' and thHis[-1] == 'b':
+        return True
+    else: 
+        return False
+def colPerc(mHis, thHis, mScore, thScore):
+    '''What percentage of their history is collusion'''
+    tot = len(thHis)
+    colN = 0
+    colP = 0.0
+    for move in thHis:
+        if move == 'c': 
+            colN =+ 1
+    colP = float(colN)/tot
+    return colP
     
-def move(my_history, their_history, my_score, their_score):
+def move(mHis, thHis, mScore, thScore):
     ''' Arguments accepted: my_history, their_history are strings.
     my_score, their_score are ints.
     
@@ -25,11 +47,11 @@ def move(my_history, their_history, my_score, their_score):
     
     # Analyze my_history and their_history and/or my_score and their_score.
     # Decide whether to return 'c' or 'b'.
-    
-    mhis = my_history
-    thhis = their_history
-    mscore = my_score
-    thscore = their_score
+    while mHis== '':
+        return 'c'
+    if thHis[-3] == 'bbb':
+        while 'cc' not in thHis[-2]:
+            return 'b'
     
     return 'c'
 
