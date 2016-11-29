@@ -24,29 +24,33 @@ def colPerc(their_history):
     '''What percentage of their history is collusion'''
     
     thHis = their_history
-    
-    tot = len(thHis)
-    colN = 0
-    colP = 0.0
-    for move in thHis:
-        if move == 'c': 
-            colN += 1
-    colP = float(colN)/tot
-    return colP
+    if len(thHis) > 0:
+        tot = float(len(thHis))
+        colN = 0.0
+        colP = 0.0
+        for move in thHis:
+            if move == 'c': 
+                colN += 1
+        colP = colN/tot
+        return colP
+    else: 
+        return 'No History'
     
 def betPerc(their_history):
     '''What percentage of their history is betrayal'''
     
     thHis = their_history
-    
-    tot = len(thHis)
-    betN = 0
-    betP = 0.0
-    for move in thHis:
-        if move == 'b': 
-            betN += 1
-    betP = betN/tot
-    return betP
+    if len(thHis) > 0:
+        tot = float(len(thHis))
+        betN = 0.0
+        betP = 0.0
+        for move in thHis:
+            if move == 'b': 
+                betN += 1
+        betP = betN/tot
+        return betP
+    else:
+        return 'No History'
     
 def move(my_history, their_history, my_score, their_score):
     ''' Arguments accepted: my_history, their_history are strings.
@@ -60,6 +64,9 @@ def move(my_history, their_history, my_score, their_score):
     thHis = their_history
     mScore = my_score
     thScore = their_score
+    
+    colP = colPerc(thHis)
+    betP = betPerc(thHis)
 
     # my_history: a string with one letter (c or b) per round that has been played with this opponent.
     # their_history: a string of the same length as history, possibly empty. 
@@ -75,12 +82,16 @@ def move(my_history, their_history, my_score, their_score):
     if thHis[-3:] == 'bbb':
         return 'b'
     
+    if thHis[-2:] == 'cc' and thHis[-3] == 'b':
+        return 'c'
+    
     if colP >= 0.9 and thHis[-2:] == 'cc':
         return 'b'
     
-    if betP >= 0.9 and thHis[-1] == 'b':
+    if betP >= 0.75 and thHis[-1] == 'b':
         return 'b'
     
+    return 'c'
     
 def test_move(my_history, their_history, my_score, their_score, result):
     '''calls move(my_history, their_history, my_score, their_score)
@@ -91,7 +102,6 @@ def test_move(my_history, their_history, my_score, their_score, result):
     if real_result == result:
         return True
     else:
-        print type(real_result)
         print("move(" +", ".join(["'"+my_history+"'", "'"+their_history+"'",
             str(my_score), 
             str(their_score)])+") returned " + "'" + 
@@ -119,15 +129,24 @@ if __name__ == '__main__':
  
    # Test 3: If offered collusion twice after betrayal, collude
     if test_move(my_history='bbb', 
-                their_history='bbbcccc',
+                their_history='bbbcbcc',
+                my_score=0,
+                their_score=0,
+                result='c'):
+        print 'Test Passed'
+   
+    # Test 4: If they collude 90% of the time, betray them
+    if test_move(my_history= 'ccc', 
+                their_history= 'cccccccccc', 
                 my_score=0,
                 their_score=0,
                 result='b'):
         print 'Test Passed'
-    # Test 4: If they collude 90% of the time, betray them
-    if test_move(my_history= 'ccc', 
-                their_history= 'cccccccccb', 
+        
+    # Test 5: When all else fails, collude
+    if test_move(my_history='bbbbbbbbbb',
+                their_history='ccbcbcbcbcbcbc',
                 my_score=0,
                 their_score=0,
-                result='b'):
+                result='c'):
         print 'Test Passed'
