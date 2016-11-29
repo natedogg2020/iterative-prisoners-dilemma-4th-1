@@ -15,7 +15,7 @@ def betrayed(their_history):
     
     thHis = their_history
     
-    if thHis[-1] == 'b':
+    if thHis[-3:] == 'bbb':
         return True
     else: 
         return False
@@ -67,17 +67,20 @@ def move(my_history, their_history, my_score, their_score):
     # The most recent round is my_history[-1] and their_history[-1].
     
     # Analyze my_history and their_history and/or my_score and their_score.
-    # Decide whether to return 'c' or 'b'.
+    # Decide whether to return 'c' or 'b'. 
     
-    
-    while mHis== '':
+    if mHis == '':
         return 'c'
-    if thHis[-3] == 'bbb':
-        while 'cc' not in thHis[-2]:
-            return 'b'
+   
+    if thHis[-3:] == 'bbb':
+        return 'b'
     
-    return 'c'
-
+    if colP >= 0.9 and thHis[-2:] == 'cc':
+        return 'b'
+    
+    if betP >= 0.9 and thHis[-1] == 'b':
+        return 'b'
+    
     
 def test_move(my_history, their_history, my_score, their_score, result):
     '''calls move(my_history, their_history, my_score, their_score)
@@ -88,11 +91,12 @@ def test_move(my_history, their_history, my_score, their_score, result):
     if real_result == result:
         return True
     else:
-        print("move(" +
-            ", ".join(["'"+my_history+"'", "'"+their_history+"'",
-                       str(my_score), str(their_score)])+
-            ") returned " + "'" + real_result + "'" +
-            " and should have returned '" + result + "'")
+        print type(real_result)
+        print("move(" +", ".join(["'"+my_history+"'", "'"+their_history+"'",
+            str(my_score), 
+            str(their_score)])+") returned " + "'" + 
+            real_result + "'" + " and should have returned '" + 
+            result + "'")
         return False
 
 if __name__ == '__main__':
@@ -103,18 +107,27 @@ if __name__ == '__main__':
               my_score=0,
               their_score=0,
               result='c'):
-         print 'Test passed'
+            print 'Test Passed'
     
-     # Test 2: Continue betraying if they collude despite being betrayed.
-    test_move(my_history='bbb',
-              their_history='ccc', 
-              # Note the scores are for testing move().
-              # The history and scores don't need to match unless
-              # that is relevant to the test of move(). Here,
-              # the simulation (if working correctly) would have awarded 
-              # 300 to me and -750 to them. This test will pass if and only if
-              # move('bbb', 'ccc', 0, 0) returns 'b'.
-              my_score=0, 
-              their_score=0,
-              result='b')
-                                                                                                           
+     # Test 2: If betrayed 3 times, betray back
+    if test_move(my_history='cbb', 
+                their_history='bbb', 
+                my_score=0, 
+                their_score=0, 
+                result='b'):
+          print 'Test Passed'  
+ 
+   # Test 3: If offered collusion twice after betrayal, collude
+    if test_move(my_history='bbb', 
+                their_history='bbbcccc',
+                my_score=0,
+                their_score=0,
+                result='b'):
+        print 'Test Passed'
+    # Test 4: If they collude 90% of the time, betray them
+    if test_move(my_history= 'ccc', 
+                their_history= 'cccccccccb', 
+                my_score=0,
+                their_score=0,
+                result='b'):
+        print 'Test Passed'
