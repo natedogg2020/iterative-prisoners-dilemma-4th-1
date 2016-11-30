@@ -7,8 +7,8 @@
 ####
 
 team_name = 'Lauren&Carly' # Only 10 chars displayed.
-strategy_name = 'The name the team gives to this strategy'
-strategy_description = 'How does this strategy decide?'
+strategy_name = 'Weary Collusion'
+strategy_description = 'Colludes until betrayed but will collude again if trust regained'
 
 def betrayed(their_history):
     '''Checks if we were betrayed'''
@@ -79,17 +79,18 @@ def move(my_history, their_history, my_score, their_score):
     if mHis == '':
         return 'c'
    
-    if thHis[-3:] == 'bbb':
-        return 'b'
-    
-    if thHis[-2:] == 'cc' and thHis[-3] == 'b':
-        return 'c'
-    
-    if colP >= 0.9 and thHis[-2:] == 'cc':
-        return 'b'
-    
-    if betP >= 0.75 and thHis[-1] == 'b':
-        return 'b'
+    if len(mHis) > 2 and len(thHis) > 2:
+        if thHis[-3:] == 'bbb':
+            return 'b'
+        
+        if (thHis[-2:] == 'cc' and thHis[-3] == 'b' ) or len(thHis) < 3:
+            return 'c'
+        
+        if colP >= 0.65 and thHis[-2:] == 'cc':
+            return 'b'
+        
+        if betP >= 0.8 and thHis[-1] == 'b':
+            return 'b'
     
     return 'c'
     
@@ -146,6 +147,14 @@ if __name__ == '__main__':
     # Test 5: When all else fails, collude
     if test_move(my_history='bbbbbbbbbb',
                 their_history='ccbcbcbcbcbcbc',
+                my_score=0,
+                their_score=0,
+                result='c'):
+        print 'Test Passed'
+    
+    #Second Move
+    if test_move(my_history='c',
+                their_history='c',
                 my_score=0,
                 their_score=0,
                 result='c'):
