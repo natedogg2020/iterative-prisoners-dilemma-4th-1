@@ -6,7 +6,7 @@
 #     move: A function that returns 'c' or 'b'
 ####
 
-team_name = 'Lauren&Carly' # Only 10 chars displayed.
+team_name = 'LaurCar' # Only 10 chars displayed.
 strategy_name = 'Weary Collusion'
 strategy_description = 'Colludes until betrayed but will collude again if trust regained'
 
@@ -83,7 +83,7 @@ def move(my_history, their_history, my_score, their_score):
         if thHis[-3:] == 'bbb':
             return 'b'
         
-        if (thHis[-2:] == 'cc' and thHis[-3] == 'b' ) or len(thHis) < 3:
+        if thHis[-2:] == 'cc' and thHis[-3] == 'b':
             return 'c'
         
         if colP >= 0.65 and thHis[-2:] == 'cc':
