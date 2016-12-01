@@ -21,7 +21,7 @@ def betrayed(their_history):
         return False
         
 def colPerc(their_history):
-    '''What percentage of their history is collusion'''
+    '''Determines the percentage of their history that is collusion'''
     
     thHis = their_history
     if len(thHis) > 0:
@@ -37,7 +37,7 @@ def colPerc(their_history):
         return 'No History'
     
 def betPerc(their_history):
-    '''What percentage of their history is betrayal'''
+    '''Determines the percentage of their history that is betrayal'''
     
     thHis = their_history
     if len(thHis) > 0:
@@ -59,40 +59,35 @@ def move(my_history, their_history, my_score, their_score):
     Make my move.
     Returns 'c' or 'b'. 
     '''
-
+    #Changes Variables Names because underscore conventions suck, and so does my spelling, so do you see the issue? Right.
     mHis = my_history
     thHis = their_history
     mScore = my_score
     thScore = their_score
     
+    #Calls the percentage algorithms so that we have a percentage of betrayal and one of collusion
     colP = colPerc(thHis)
     betP = betPerc(thHis)
-
-    # my_history: a string with one letter (c or b) per round that has been played with this opponent.
-    # their_history: a string of the same length as history, possibly empty. 
-    # The first round between these two players is my_history[0] and their_history[0].
-    # The most recent round is my_history[-1] and their_history[-1].
     
-    # Analyze my_history and their_history and/or my_score and their_score.
-    # Decide whether to return 'c' or 'b'. 
-    
+    #The first move will always be to collude
     if mHis == '':
         return 'c'
-   
+    
+    #runs this if mine and their total history is over two 
     if len(mHis) > 2 and len(thHis) > 2:
-        if thHis[-3:] == 'bbb':
+        if thHis[-3:] == 'bbb':   #returns b if their last three moves are 'bbb'
             return 'b'
         
-        if thHis[-2:] == 'cc' and thHis[-3] == 'b':
+        if thHis[-2:] == 'cc' and thHis[-3] == 'b':   #returns c if they betrayed three times ago and colluded for the last two times
             return 'c'
         
-        if colP >= 0.65 and thHis[-2:] == 'cc':
+        if colP >= 0.65 and thHis[-2:] == 'cc':   #returns b if they're collusion percentage is overor equal to 65% and they have colluded the last two times
             return 'b'
         
-        if betP >= 0.8 and thHis[-1] == 'b':
+        if betP >= 0.8 and thHis[-1] == 'b':   #returns b if they're betrayal percentage is over or equal to 80% and they betrayed in the last time
             return 'b'
     
-    return 'c'
+    return 'c' #returns c if none of the other ifs are filled 
     
 def test_move(my_history, their_history, my_score, their_score, result):
     '''calls move(my_history, their_history, my_score, their_score)
