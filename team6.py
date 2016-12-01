@@ -7,9 +7,26 @@
 ####
 
 team_name = 'Hr 4 Gods' # Only 10 chars displayed.
-strategy_name = 'The name the team gives to this strategy'
-strategy_description = 'How does this strategy decide?'
-    
+strategy_name = 'Colude with forgiving retaliation'
+strategy_description = "Mainly colude. If betrayed, then betray but forgives if opponent starts to colude"
+
+def check_betrayals(their_history):
+    if len(their_history) >= 3:
+        if (their_history[-3] == their_history[-1] == 'b' and their_history[-2] == 'c') or (their_history[-3] == their_history[-1] == 'c' and their_history[-2] =='b'):
+            return True
+        elif their_history[-3] == 'b' and their_history[-2] == their_history[-1] == 'c':
+            return False
+        elif their_history[-2] == their_history[-3] == 'b':
+            return True
+        else:
+            return False 
+    elif len(their_history) > 0:
+        if their_history[-1] == 'b':
+            return True
+        else:
+            return False
+    else:
+        return False
 def move(my_history, their_history, my_score, their_score):
     ''' Arguments accepted: my_history, their_history are strings.
     my_score, their_score are ints.
@@ -25,9 +42,10 @@ def move(my_history, their_history, my_score, their_score):
     
     # Analyze my_history and their_history and/or my_score and their_score.
     # Decide whether to return 'c' or 'b'.
-    
-    return 'c'
-
+    if check_betrayals(their_history) == True:
+        return 'b'
+    else:
+        return 'c'
     
 def test_move(my_history, their_history, my_score, their_score, result):
     '''calls move(my_history, their_history, my_score, their_score)
@@ -52,11 +70,11 @@ if __name__ == '__main__':
               their_history='', 
               my_score=0,
               their_score=0,
-              result='b'):
+              result='c'):
          print 'Test passed'
      # Test 2: Continue betraying if they collude despite being betrayed.
-    test_move(my_history='bbb',
-              their_history='ccc', 
+    test_move(my_history='cccc',
+              their_history='cccc', 
               # Note the scores are for testing move().
               # The history and scores don't need to match unless
               # that is relevant to the test of move(). Here,
@@ -65,4 +83,4 @@ if __name__ == '__main__':
               # move('bbb', 'ccc', 0, 0) returns 'b'.
               my_score=0, 
               their_score=0,
-              result='b')             
+              result='c')             
