@@ -5,10 +5,10 @@
 #     strategy_description: a string
 #     move: A function that returns 'c' or 'b'
 ####
-
+import random
 team_name = 'Internalized Oppressors' # Only 10 chars displayed.
-strategy_name = 'The name the team gives to this strategy'
-strategy_description = 'How does this strategy decide?'
+strategy_name = 'Oppression Powers Activated'
+strategy_description = 'For the first 3 rounds, use the opponents history to decide how to move, and then after that, use percentages'
     
 def move(my_history, their_history, my_score, their_score):
     ''' Arguments accepted: my_history, their_history are strings.
@@ -25,10 +25,64 @@ def move(my_history, their_history, my_score, their_score):
     
     # Analyze my_history and their_history and/or my_score and their_score.
     # Decide whether to return 'c' or 'b'.
-    
-    return 'c'
 
-    
+    if len(my_history) == 0:
+        return 'c'
+    if len(my_history) == 1:
+        return 'c'
+        
+    if len(my_history) ==2:
+        if their_history[-1] == 'b' and their_history[-2]=='c':
+            return 'c'
+        if their_history[-1] == 'c' and their_history[-2]=='b':
+            return 'b'
+        if their_history[-1] == 'b' and their_history[-2]=='b':
+            return 'b'
+        if their_history[-1] == 'c' and their_history[-2]=='c':
+            return 'c'
+    if len(my_history) ==3:
+        if their_history[-1] == 'c' and their_history[-2]=='c' and their_history[-3]=='c':
+            return 'c'
+        if their_history[-1] == 'b' and their_history[-2]=='c' and their_history[-3]=='c':
+            return 'b'
+        if their_history[-1] == 'b' and their_history[-2]=='b' and their_history[-3]=='c':
+            return 'b'
+        if their_history[-1] == 'b' and their_history[-2]=='b' and their_history[-3]=='b':
+            return 'b'
+        if their_history[-1] == 'c' and their_history[-2]=='b' and their_history[-3]=='b':
+            return 'c'
+        if their_history[-1] == 'c' and their_history[-2]=='c' and their_history[-3]=='b':
+            return 'b'
+    if len(my_history) >= 3:
+        be = float(their_history.count('b'))
+        co = their_history.count('c')
+        tot = len(their_history)
+        bper = float((be/tot))
+        last = their_history[-1]
+        if bper <=(.1):
+            return 'c'
+        if bper <=(.2):
+            return 'c'
+        if bper <=(.3):
+            return 'c'
+        if bper <=(.4):
+            res = random.randint(1,2)
+            if res == 1:
+                return 'b'
+            else:
+                return 'c'
+        if bper <=(.5):
+            return 'b'
+        if bper <=(.6):
+            return '6'
+        if bper <=(.7):
+            return 'b'
+        if bper <=(.8):
+            return 'b'
+        if bper <=(.9):
+            return 'b'
+        return 'wtf happened'
+                       
 def test_move(my_history, their_history, my_score, their_score, result):
     '''calls move(my_history, their_history, my_score, their_score)
     from this module. Prints error if return value != result.
@@ -48,15 +102,15 @@ def test_move(my_history, their_history, my_score, their_score, result):
 if __name__ == '__main__':
      
     # Test 1: Betray on first move.
-    if test_move(my_history='',
-              their_history='', 
+    if test_move(my_history='bbb',
+              their_history='ccc', 
               my_score=0,
               their_score=0,
               result='b'):
          print 'Test passed'
      # Test 2: Continue betraying if they collude despite being betrayed.
     test_move(my_history='bbb',
-              their_history='ccc', 
+              their_history='bbb', 
               # Note the scores are for testing move().
               # The history and scores don't need to match unless
               # that is relevant to the test of move(). Here,
